@@ -28,4 +28,4 @@ VERY IMPORTANT !!!!   :    The Main computer and the phone got to stay in a live
 
 THE GOAL OF THE PROJECT : 
 I don’t want to get a chipset planted on my brain like neuralink, I want to create a tool I can trust with my data, in reliability and that I can totally customize, to let it be personal, open source and efficient.
-The first idea here was to create a way for humans to go beyond what they can do by giving them an assistant that helps in every day's tasks as much as dangerous or complex situations.
+The first idea here was to create a way for humans to go beyond what they can do by giving them an assistant that helps in every day's tasks as much as dangerous or complex situations. :3
