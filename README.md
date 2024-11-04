@@ -32,4 +32,4 @@ The first idea here was to create a way for humans to go beyond what they can do
 
 ## License
 
-This project is licensed under the GNU Affero General Public License v3.0. See the [AGPL License](LICENSE) file for details.
+This project is licensed under the GNU Affero General Public License v3.0. See the [AGPL License]([LICENSE](https://www.gnu.org/licenses/agpl-3.0.txt)) file for details.
