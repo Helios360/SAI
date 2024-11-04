@@ -2,11 +2,13 @@ use std::io;
 use std::{thread,time};
 use std::time::Duration;
 use std::thread::sleep;
-use fantoccini::{Client,ClientBuilder};
-use rdev::{listen, Event};use rdev::{simulate, Button, EventType, Key, SimulateError};
+use fantoccini::{Client,ClientBuilder};//activation of webdriver
+use rdev::{listen, Event};use rdev::{simulate, Button, EventType, Key, SimulateError};//inputs for the bot
+use winit::{event_loop::EventLoop,platform::desktop::EventLoopExtDesktop};//get the working window env
 
 #[tokio::main]
 async fn main() -> Result<(), fantoccini::error::CmdError> { 
+    //asking for users insta credentials
     println!("Pweaaaase enter your instagram username or email :3 !!!");
     let mut username = String::new();
     io::stdin().read_line(&mut username).expect("The program couldn't read the line properly sowwwyyyyyy :(");
@@ -14,13 +16,14 @@ async fn main() -> Result<(), fantoccini::error::CmdError> {
     let mut passwd = String::new();
     io::stdin().read_line(&mut passwd).expect("The program couldn't read the line properly sowwwyyyyyy :(");
     
+    //activating the webdriver with some specs
     // Connecting using "native" TLS (with feature `native-tls`; on by default)
-    let c = ClientBuilder::native().connect("http://localhost:4444").await.expect("failed to connect to WebDriver");
-    c.goto("https://www.instagram.com/").await?; //going to insta
+    let c = ClientBuilder::native().connect("http://localhost:4444").await.expect("failed to connect to WebDriver");//connection from local
+    c.goto("https://www.instagram.com/").await?;//going to insta
     let url = c.current_url().await?;
     assert_eq!(url.as_ref(), "https://www.instagram.com/");
-
-    c.set_window_size(950, 950).await?;
+    c.set_window_rect(500,0,950, 950).await?;//set window size and coords coorelated with the monitor used with witin
+    
     send(&EventType::MouseMove { x: 640.0, y: 800.0 });
     send(&EventType::ButtonPress(Button::Left));
     /*
@@ -49,3 +52,4 @@ fn send(event_type: &EventType) {
     // Let ths OS catchup (at least MacOS)
     thread::sleep(delay);
 }
+fn 
