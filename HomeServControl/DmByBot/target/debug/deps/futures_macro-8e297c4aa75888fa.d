@@ -1,0 +1,9 @@
+C:\Programing\Programs\Projects\SAI\HomeServControl\DmByBot\target\debug\deps\futures_macro-8e297c4aa75888fa.dll: C:\Users\HELLIOS\ -_-\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.31\src/lib.rs C:\Users\HELLIOS\ -_-\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.31\src\executor.rs C:\Users\HELLIOS\ -_-\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.31\src\join.rs C:\Users\HELLIOS\ -_-\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.31\src\select.rs C:\Users\HELLIOS\ -_-\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.31\src\stream_select.rs
+
+C:\Programing\Programs\Projects\SAI\HomeServControl\DmByBot\target\debug\deps\futures_macro-8e297c4aa75888fa.d: C:\Users\HELLIOS\ -_-\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.31\src/lib.rs C:\Users\HELLIOS\ -_-\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.31\src\executor.rs C:\Users\HELLIOS\ -_-\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.31\src\join.rs C:\Users\HELLIOS\ -_-\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.31\src\select.rs C:\Users\HELLIOS\ -_-\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.31\src\stream_select.rs
+
+C:\Users\HELLIOS\ -_-\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.31\src/lib.rs:
+C:\Users\HELLIOS\ -_-\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.31\src\executor.rs:
+C:\Users\HELLIOS\ -_-\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.31\src\join.rs:
+C:\Users\HELLIOS\ -_-\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.31\src\select.rs:
+C:\Users\HELLIOS\ -_-\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.31\src\stream_select.rs:
