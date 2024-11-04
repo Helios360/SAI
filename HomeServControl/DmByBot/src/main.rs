@@ -22,7 +22,6 @@ async fn main() -> Result<(), fantoccini::error::CmdError> {
     c.goto("https://www.instagram.com/").await?;//going to insta
     let url = c.current_url().await?;
     assert_eq!(url.as_ref(), "https://www.instagram.com/");
-    c.set_window_rect(500,0,950, 950).await?;//set window size and coords coorelated with the monitor used with witin
     
     send(&EventType::MouseMove { x: 640.0, y: 800.0 });
     send(&EventType::ButtonPress(Button::Left));
@@ -52,4 +51,12 @@ fn send(event_type: &EventType) {
     // Let ths OS catchup (at least MacOS)
     thread::sleep(delay);
 }
-fn 
+fn window_rected(){
+    let event_loop = EventLoop::new();
+    let monitors: Vec<_> = event_loop.available_monitors().collect();
+    if let Some(target_monitor) = get.monitor(1){
+        let screen_position=target_monitor.position();
+        let screen_size=target_monitor.size();
+        c.set_window_rect(screen_position.x,screen_position.y,950, 950);//set window size and coords coorelated with the monitor used with witin
+    }
+}
