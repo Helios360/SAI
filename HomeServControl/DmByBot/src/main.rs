@@ -2,12 +2,33 @@ use std::io;
 use std::{thread,time};
 use std::time::Duration;
 use std::thread::sleep;
+use std::process::Command;
 use fantoccini::{Client,ClientBuilder};//activation of webdriver
 use rdev::{listen, Event};use rdev::{simulate, Button, EventType, Key, SimulateError};//inputs for the bot
-use winit::{event_loop::EventLoop,platform::desktop::EventLoopExtDesktop};//get the working window env
+use execute::Execute;
+
 
 #[tokio::main]
 async fn main() -> Result<(), fantoccini::error::CmdError> { 
+    //const FFMPEG_PATH: &str = "/Programing/Programs/Projects/geckodriver.exe";
+
+    //Command::new("C:/Programing/Programs/Projects/geckodriver.exe");
+
+    //assert_eq!(b"Hello world\n", output.stdout.as_slice());
+    let exe_path = "C:/Programing/Programs/Projects/geckodriver";
+
+    let mut child = Command::new(exe_path)
+        .spawn()  // Starts the process and returns immediately
+        .expect("Failed to start .exe");
+
+    // Wait for the child process to finish
+    /*
+    let status = child
+        .wait()
+        .expect("Failed to wait on child process");
+*/
+
+    //println!("{}", String::from_utf8(output.stdout).unwrap());
     //asking for users insta credentials
     println!("Pweaaaase enter your instagram username or email :3 !!!");
     let mut username = String::new();
@@ -23,6 +44,14 @@ async fn main() -> Result<(), fantoccini::error::CmdError> {
     let url = c.current_url().await?;
     assert_eq!(url.as_ref(), "https://www.instagram.com/");
     
+
+
+
+
+
+
+
+    c.set_window_rect(50,50,950, 950);//set window size and coords coorelated with the monitor used with witin
     send(&EventType::MouseMove { x: 640.0, y: 800.0 });
     send(&EventType::ButtonPress(Button::Left));
     /*
@@ -48,15 +77,6 @@ fn send(event_type: &EventType) {
             println!("We could not send {:?}", event_type);
         }
     }
-    // Let ths OS catchup (at least MacOS)
+    // Let ths OS catchup (at least MacOS eww)
     thread::sleep(delay);
-}
-fn window_rected(){
-    let event_loop = EventLoop::new();
-    let monitors: Vec<_> = event_loop.available_monitors().collect();
-    if let Some(target_monitor) = get.monitor(1){
-        let screen_position=target_monitor.position();
-        let screen_size=target_monitor.size();
-        c.set_window_rect(screen_position.x,screen_position.y,950, 950);//set window size and coords coorelated with the monitor used with witin
-    }
 }
