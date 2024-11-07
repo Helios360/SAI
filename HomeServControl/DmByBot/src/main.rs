@@ -4,7 +4,7 @@ use std::time::Duration;
 use std::thread::sleep;
 use std::process::Command;
 use fantoccini::ClientBuilder;// activation of webdriver
-use rdev/*::{listen, Event} activate when needing mouse coords*/;use rdev::{simulate, Button, EventType, Key, SimulateError};//inputs for the bot
+use rdev::{listen, Event} /*activate when needing mouse coords*/;use rdev::{simulate, Button, EventType, Key, SimulateError};//inputs for the bot
 use display_info::DisplayInfo;
 //use std::time::Instant;
 
@@ -68,9 +68,10 @@ async fn main() -> Result<(), fantoccini::error::CmdError> {
         Ok(_) => println!("Password typed successfully!"),
         Err(err) => eprintln!("Error typing password: {:?}", err),
     }
+    45 444
 
 
-    /*can use this to print coords on cli when you make inputs
+    //*can use this to print coords on cli when you make inputs
     if let Err(error) = listen(callback) {
         println!("Error: {:?}", error)
     }
@@ -82,7 +83,7 @@ async fn main() -> Result<(), fantoccini::error::CmdError> {
             None => (),
         }
     }
-    */
+    
 
 
     sleep(Duration::from_secs(10));
@@ -126,9 +127,11 @@ fn type_text(input: &str) -> Result<(), SimulateError> {
             if shift {
                 simulate(&EventType::KeyRelease(Key::ShiftLeft))?;
             }
-        }
-        sleep(Duration::from_millis(50));
+        } else {
+        type_altgr_symbol(c).unwrap();
     }
+        sleep(Duration::from_millis(50));
+    } 
     Ok(())
 }
 
@@ -213,31 +216,57 @@ fn char_to_key(c: char) -> Option<(Key, bool)> {
         'è' => Some((Key::Num7, false)),
         '_' => Some((Key::Num8, false)),
         'ç' => Some((Key::Num9, false)),
-        'à' => Some((Key::Num0, false)),
+        'à' => Some((Key::Num0, false)),    
         ')' => Some((Key::Minus, false)),
         '=' => Some((Key::Equal, false)),
 
-        // Altgr symbols 
-        //might need to actually send altgr and stop it
-/* WORK IN PROGRESS
-        '@' => Some((Key::Num0, false, true)), // AltGr + 0
-        '#' => Some((Key::Num3, false, true)), // AltGr + Backslash
-        '[' => Some((Key::Num5, false, true)), // AltGr + Left Bracket
-        //']' => Some((Key::RightBrace, false, true)), // AltGr + Right Bracket
-        '|' => Some((Key::Num6, false, true)), // AltGr + 6
-        '{' => Some((Key::Num4, false, true)), // Shift + AltGr + Left Bracket
-        '}' => Some((Key::Equal, false, true)), // Shift + AltGr + Right Bracket
-        '~' => Some((Key::Num2, false, true)), // AltGr + 2
-        '€' => Some((Key::KeyE, false, true)), // AltGr + E
-*/
         // Common punctuation
+        '.' => Some((Key::Dot, true)),
         ',' => Some((Key::SemiColon, false)),
-        ';' => Some((Key::Comma, false)),
+        ';' => Some((Key::Dot, false)),
         ':' => Some((Key::Slash, true)),
         '!' => Some((Key::Num8, true)),
 
+        '#' | '@' | '|' | '~' | '€' => None,
+
         _ => None,
     }
+}
+fn type_altgr_symbol(c: char) -> Result<(), SimulateError> {
+    match c {
+        '#' => {
+            simulate(&EventType::KeyPress(Key::AltGr))?;
+            simulate(&EventType::KeyPress(Key::Num3))?;
+            simulate(&EventType::KeyRelease(Key::Num3))?;
+            simulate(&EventType::KeyRelease(Key::AltGr))?;
+        }
+        '@' => {
+            simulate(&EventType::KeyPress(Key::AltGr))?;
+            simulate(&EventType::KeyPress(Key::Num0))?;
+            simulate(&EventType::KeyRelease(Key::Num0))?;
+            simulate(&EventType::KeyRelease(Key::AltGr))?;
+        }
+        '|' => {
+            simulate(&EventType::KeyPress(Key::AltGr))?;
+            simulate(&EventType::KeyPress(Key::Num6))?;
+            simulate(&EventType::KeyRelease(Key::Num6))?;
+            simulate(&EventType::KeyRelease(Key::AltGr))?;
+        }
+        '~' => {
+            simulate(&EventType::KeyPress(Key::AltGr))?;
+            simulate(&EventType::KeyPress(Key::Num2))?;
+            simulate(&EventType::KeyRelease(Key::Num2))?;
+            simulate(&EventType::KeyRelease(Key::AltGr))?;
+        }
+        '€' => {
+            simulate(&EventType::KeyPress(Key::AltGr))?;
+            simulate(&EventType::KeyPress(Key::KeyE))?;
+            simulate(&EventType::KeyRelease(Key::KeyE))?;
+            simulate(&EventType::KeyRelease(Key::AltGr))?;
+        }
+        _ => {}
+    }
+    Ok(())
 }
 
 /*For QWERTY keyboards !!!
