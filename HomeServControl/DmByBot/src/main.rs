@@ -36,29 +36,43 @@ async fn main() -> Result<(), fantoccini::error::CmdError> {
     c.goto("https://www.instagram.com/").await?;//going to insta
     let url = c.current_url().await?;
     assert_eq!(url.as_ref(), "https://www.instagram.com/");
-    //c.set_window_rect(50,50, 550, 550); set window size and coords corelated with the monitor (broken)
+    //c.set_window_rect(0,0,1000,1000).await;// set window size and coords corelated with the monitor (broken)
+    
+    
+    
+    /*----------------------------ATTENTION!!!----------------------------/
 
-
-    // getting the position of the main windows(where the selenium instance will start)
-    // let start = Instant::now();
+    The commented part bellow has been abandoned because it is not "usefull" for the project,
+    the following part had the purpose to scan monitors to detects the main monitor to be able to sync mouse coords and window coords
+    but the first purpose of SAI is to run on a minimalistic environment so no triple screen or things like that,
+    the program will only work on the SAI environement machine only screen...
+    
+    // getting the position of the main windows(where the selenium instance will start) DO NOT USE !
+    //let start = Instant::now();println!("{}",start);
     let mut main_posx=0;
     let mut main_posy=0;
     let display_infos = DisplayInfo::all().unwrap();
     for display_info in display_infos {
-        // println!("{display_info:?}",);
-        println!("{}",display_info.width);
-        if display_info.is_primary == false{
+        println!("{display_info:?}",);
+        //println!("{}",display_info.width);
+        if display_info.is_primary == true{
+            break;
+        }else if display_info.is_primary == false{
             main_posx+= display_info.width;
             main_posy+= display_info.height;
-        }else if display_info.is_primary == true{
-            break;
         }
-    }    
+        println!("{}",main_posx);
+    }
+
+    */
 
 
-    click(640,280,main_posx,main_posy);// click makes the mouse go to desired coord with adapted screen size and nth
+    //click(640,280,main_posx,main_posy);// click makes the mouse go to desired coord with adapted screen size and nth
+    //click(640,1160/*,main_posx,main_posy*/);DEV MODE (wqhd screen at left of the main screen "me :3") so; mainScreenHeight - leftScreenHeight + mouseHeightCoord = mouseHeightClick
+    click(640,800/*,main_posx,main_posy*/);
     thread::sleep(time::Duration::from_secs(2));
-    click(840,777,main_posx,main_posy);
+    //click(840,707);
+    click(832,300);
     match type_text(&username) {
         Ok(_) => println!("Password typed successfully!"),
         Err(err) => eprintln!("Error typing password: {:?}", err),
@@ -68,10 +82,13 @@ async fn main() -> Result<(), fantoccini::error::CmdError> {
         Ok(_) => println!("Password typed successfully!"),
         Err(err) => eprintln!("Error typing password: {:?}", err),
     }
-    45 444
+    thread::sleep(time::Duration::from_secs(2));
+    click(846,800);
+    thread::sleep(time::Duration::from_secs(2));
+    click(45,444);
 
 
-    //*can use this to print coords on cli when you make inputs
+    //can use this to print coords on cli when you make inputs
     if let Err(error) = listen(callback) {
         println!("Error: {:?}", error)
     }
@@ -83,7 +100,7 @@ async fn main() -> Result<(), fantoccini::error::CmdError> {
             None => (),
         }
     }
-    
+
 
 
     sleep(Duration::from_secs(10));
@@ -107,11 +124,12 @@ fn send(event_type: &EventType) {
     // let the OS catchup (at least MacOS eww)
     thread::sleep(delay);
 }
-
-fn click(posx:u32,posy_minus_height:u32,main_posx:u32,main_posy:u32){
-    let xed=main_posx as f64 + posx as f64;
-    let yed=main_posy as f64 - posy_minus_height as f64;
-    send(&EventType::MouseMove { x: xed, y: yed });
+//,main_posx:u32,main_posy:u32(to add in params)
+fn click(posx:u32,posy_minus_height:u32){
+    //let xed=main_posx as f64 + posx as f64;comments are part of the more than one screen not used feature
+    //let yed=main_posy as f64 - posy_minus_height as f64;
+    //send(&EventType::MouseMove { x: xed, y: yed });
+    send(&EventType::MouseMove { x: posx as f64, y: posy_minus_height as f64});
     send(&EventType::ButtonPress(Button::Left));
     send(&EventType::ButtonRelease(Button::Left));
 }
