@@ -7,7 +7,7 @@ use fantoccini::ClientBuilder;// activation of webdriver
 use rdev::{listen, Event} /*activate when needing mouse coords*/;use rdev::{simulate, Button, EventType, Key, SimulateError};//inputs for the bot
 use display_info::DisplayInfo;
 //use std::time::Instant;
-
+//test
 #[tokio::main]
 async fn main() -> Result<(), fantoccini::error::CmdError> { 
     
