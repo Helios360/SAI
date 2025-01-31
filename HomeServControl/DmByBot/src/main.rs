@@ -39,7 +39,6 @@ async fn main() -> Result<(), fantoccini::error::CmdError> {
     //c.set_window_rect(0,0,1000,1000).await;// set window size and coords corelated with the monitor (broken)
     
     
-    
     /*----------------------------ATTENTION!!!----------------------------/
 
     The commented part bellow has been abandoned because it is not "usefull" for the project,
@@ -68,13 +67,13 @@ async fn main() -> Result<(), fantoccini::error::CmdError> {
 
 
     //click(640,280,main_posx,main_posy);// click makes the mouse go to desired coord with adapted screen size and nth
-    //click(640,1160/*,main_posx,main_posy*/);DEV MODE (wqhd screen at left of the main screen "me :3") so; mainScreenHeight - leftScreenHeight + mouseHeightCoord = mouseHeightClick
+    //click(640,1160/*,main_posx,main_posy*/);DEV MODE (wqhd screen at left of the main screen "me :3") so : mainScreenHeight - leftScreenHeight + mouseHeightCoord = mouseHeightClick
     click(640,800/*,main_posx,main_posy*/);
     thread::sleep(time::Duration::from_secs(2));
     //click(840,707);
     click(832,300);
     match type_text(&username) {
-        Ok(_) => println!("Password typed successfully!"),
+        Ok(_) => println!("Username typed successfully!"),
         Err(err) => eprintln!("Error typing password: {:?}", err),
     }
     send(&EventType::KeyPress(Key::Tab));
@@ -87,20 +86,28 @@ async fn main() -> Result<(), fantoccini::error::CmdError> {
     thread::sleep(time::Duration::from_secs(2));
     click(45,444);
 
-
-    //can use this to print coords on cli when you make inputs
-    if let Err(error) = listen(callback) {
-        println!("Error: {:?}", error)
-    }
+//can use this to print coords on cli when you make inputs
     
-    fn callback(event: Event) {
+    if let Err(error) = listen(callback) { //blocks at err
+        println!("Error: {:?}", error);
+    }
+    /*
+    fn callback(event: Event) { // listens for events
         println!("My callback {:?}", event);
         match event.name {
             Some(string) => println!("User wrote {:?}", string),
             None => (),
         }
+    }*/
+    fn callback(event: rdev::Event) { // listens for events
+    if let rdev::EventType::KeyPress(key) = event.event_type {
+        // Check for specific key names or codes (e.g., "Control Left" or similar)
+        if key == rdev::Key::ControlLeft || key == rdev::Key::ControlRight {
+            println!("User pressed Ctrl key: {:?}", event);
+            println!("Mouse coords : {:?}",)
+        }
     }
-
+}
 
 
     sleep(Duration::from_secs(10));
@@ -124,7 +131,7 @@ fn send(event_type: &EventType) {
     // let the OS catchup (at least MacOS eww)
     thread::sleep(delay);
 }
-//,main_posx:u32,main_posy:u32(to add in params)
+// main_posx:u32,main_posy:u32(to add in params)
 fn click(posx:u32,posy_minus_height:u32){
     //let xed=main_posx as f64 + posx as f64;comments are part of the more than one screen not used feature
     //let yed=main_posy as f64 - posy_minus_height as f64;
@@ -153,7 +160,7 @@ fn type_text(input: &str) -> Result<(), SimulateError> {
     Ok(())
 }
 
-// yes I asked chatgpt for the lists whatsup
+// yes I asked AI for the lists whatsup
 fn char_to_key(c: char) -> Option<(Key, bool)> {
     match c {
         // Lowercase letters
