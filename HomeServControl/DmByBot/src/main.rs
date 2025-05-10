@@ -72,8 +72,12 @@ async fn main() -> Result<(), fantoccini::error::CmdError> {
     let _ = enigo.button(Button::Left,Click);
 
     let notif = c.find(Locator::Css(".x1n2onr6 div div div div div div div div span")).await?;
-    let inner_notif = div.inner_html().await?;
+    let inner_notif = notif.prop("innerHTML").await?;
 
+    match inner_notif{
+        Some(html)=>println!("Inner HTML is {}", html),
+        None=>println!("Inner HTML is not available"),
+    }
 
 
     sleep(Duration::from_secs(1000));

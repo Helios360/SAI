@@ -296,7 +296,7 @@ fn create_nav_button<'a>(app: &'a App, label: &'a str, page: Page) -> Element<'a
 //Widgets of the Home page
 fn create_layout() -> Element<'static, Message> {
     let handle = svg::Handle::from_memory(include_bytes!("../sources/msg-icon.svg").as_slice());
-    let socials = svg::Handle::from_memory(include_bytes!("../sources/socials.svg").as_slice());
+    let socials = svg::Handle::from_memory(include_bytes!("../sources/Socials.svg").as_slice());
     let games = svg::Handle::from_memory(include_bytes!("../sources/Games.svg").as_slice());
     let news = svg::Handle::from_memory(include_bytes!("../sources/News.svg").as_slice());
     let utils = svg::Handle::from_memory(include_bytes!("../sources/Utils.svg").as_slice());
