@@ -1,3 +1,0 @@
-/home/hellios/Programs/Projects/SAI/PortableMods/test/build/CMakeFiles/MyExecutable.dir
-/home/hellios/Programs/Projects/SAI/PortableMods/test/build/CMakeFiles/edit_cache.dir
-/home/hellios/Programs/Projects/SAI/PortableMods/test/build/CMakeFiles/rebuild_cache.dir

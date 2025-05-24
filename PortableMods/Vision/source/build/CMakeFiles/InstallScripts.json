@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/hellios/Programs/Projects/SAI/PortableMods/Vision/source/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
