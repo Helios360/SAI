@@ -1,11 +1,10 @@
 use std::process::{Command, Stdio};
 use std::{thread, time::Duration};
+use tiny_http::{Server, Response};
 
 fn main() {
     let display_num = ":98";
-
-    // Step 1: Start Xvfb (virtual display)
-    let xvfb = Command::new("Xvfb")
+    let mut xvfb = Command::new("Xvfb")
         .arg(display_num)
         .arg("-screen")
         .arg("0")
@@ -16,25 +15,31 @@ fn main() {
         .expect("Failed to start Xvfb");
 
     println!("Started Xvfb on display {}", display_num);
-    thread::sleep(Duration::from_secs(2)); // wait for Xvfb to initialize
+    thread::sleep(Duration::from_secs(2));
 
-    // Step 2: Launch LibreWolf using the virtual display
-    let librewolf = Command::new("librewolf")
-        .env("DISPLAY", display_num)
-        .arg("--no-remote") // allows multiple instances
-        .arg("-P")
-        .arg("HISM_Main")     // use a named profile (must already exist)
-        .arg("https://www.instagram.com/direct/inbox/")
+    let mut node_script = Command::new("node")
+        .arg("Dm_Monitor/dm_monitor.js")
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
         .spawn()
-        .expect("Failed to launch LibreWolf");
+        .expect("Failed to start Node script");
 
-    println!("LibreWolf launched in virtual display.");
+    println!("Node.js monitor launched.");
+    
+    
+    let server = Server::http("127.0.0.1:3000").unwrap();
+    println!("Listening on http://localhost:3000...");
 
-    // Step 3: Wait or interact here (add automation if needed)
-    thread::sleep(Duration::from_secs(30)); // or loop + automate
+    for request in server.incoming_requests() {
+        println!("Request received: {:?}", request);
 
-    // Cleanup: Xvfb and LibreWolf will continue unless killed
-    // You could optionally kill them here (if not managed externally)
-    // For now, just inform:
-    println!("LibreWolf is running. Manually stop if needed.");
+        println!("Method: {:?}", request.method());
+        println!("URL: {:?}", request.url());
+
+        let response = Response::from_string("OK");
+        request.respond(response).unwrap();
+    }
+
+    xvfb.kill().ok();
+    node_script.kill().ok();
 }
