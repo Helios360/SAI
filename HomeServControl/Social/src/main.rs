@@ -16,9 +16,22 @@ fn main() {
 
     println!("Started Xvfb on display {}", display_num);
     thread::sleep(Duration::from_secs(2));
+    let x11vnc_result = Command::new("x11vnc")
+        .args([
+            "-display", display_num,
+            "-rfbport", "5998",  // Bind explicitly to match DISPLAY :98
+            "-nopw",
+            "-forever",
+            "-shared",
+        ])
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn();
+
 
     let mut node_script = Command::new("node")
         .arg("Dm_Monitor/dm_monitor.js")
+        .env("DISPLAY", display_num)
         .stdout(Stdio::null())
         .stderr(Stdio::null())
         .spawn()
