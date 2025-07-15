@@ -1,38 +1,44 @@
 const { firefox } = require('playwright');
 
 (async () => {
-  const browser = await firefox.launch({ headless: false });
-  const context = await browser.newContext();
-  const page = await context.newPage();
-
-  await page.goto('https://www.instagram.com/direct/inbox/');
-  console.log("Page loaded. Waiting for user login...");
-  await page.waitForTimeout(15000); // Let user log in manually
-
-  // Pipe browser console output to terminal
-  page.on('console', msg => {
-    const text = msg.text();
-    if (text.includes("Mutation")) {
-      console.log(`[browser]: ${text}`);
-    }
+  const browser = await firefox.launch({
+    headless: true, // important for xvfb
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
 
-  // Inject the MutationObserver
+  const page = await browser.newPage();
+
+  // Print mutations to stdout
+  await page.exposeFunction('onMutation', (mutation) => {
+    console.log('Mutation detected:', JSON.stringify(mutation));
+  });
+
+  // Replace with your target URL
+  const url = process.argv[2] || 'https://instagram.com';
+
+  await page.goto(url, { waitUntil: 'load' });
+
+  // Inject the MutationObserver into the page context
   await page.evaluate(() => {
-    const observer = new MutationObserver(() => {
-      console.log("Mutation fired!"); // triggers Node fetch
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        window.onMutation({
+          type: mutation.type,
+          target: mutation.target.outerHTML,
+          addedNodes: Array.from(mutation.addedNodes).map(node => node.outerHTML || node.textContent),
+          removedNodes: Array.from(mutation.removedNodes).map(node => node.outerHTML || node.textContent),
+          attributeName: mutation.attributeName,
+        });
+      }
     });
 
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, {
+      attributes: true,
+      childList: true,
+      subtree: true
+    });
   });
 
-  page.on('console', msg => {
-    const text = msg.text();
-    if (text.includes("Mutation fired!")) {
-      fetch("http://localhost:3000/notify", { method: "POST" });
-    }
-  });
-
-
-    console.log("MutationObserver running...");
-  })();
+  // Keep the process alive
+  console.log(`Observing mutations on ${url}... Press Ctrl+C to exit.`);
+})();

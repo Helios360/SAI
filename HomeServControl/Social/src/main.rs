@@ -1,58 +1,53 @@
-use std::process::{Command, Stdio};
+use std::process::{Command, Child};
 use std::{thread, time::Duration};
-use tiny_http::{Server, Response};
+use std::env;
 
-fn main() {
-    let display_num = ":98";
-    let mut xvfb = Command::new("Xvfb")
-        .arg(display_num)
+use enigo::{Enigo, Mouse, Settings, Coordinate, Button};
+use enigo::Direction::Click;
+
+fn start_xvfb() -> Child {
+    Command::new("Xvfb")
+        .arg(":99")
         .arg("-screen")
         .arg("0")
-        .arg("1280x1024x24")
-        .stdout(Stdio::null())
-        .stderr(Stdio::null())
+        .arg("1024x768x24")
         .spawn()
-        .expect("Failed to start Xvfb");
+        .expect("Failed to start Xvfb")
+}
 
-    println!("Started Xvfb on display {}", display_num);
-    thread::sleep(Duration::from_secs(2));
-    let x11vnc_result = Command::new("x11vnc")
-        .args([
-            "-display", display_num,
-            "-rfbport", "5998",  // Bind explicitly to match DISPLAY :98
-            "-nopw",
-            "-forever",
-            "-shared",
-        ])
-        .stdout(Stdio::null())
-        .stderr(Stdio::null())
-        .spawn();
+fn main() {
+    // 1. Start Xvfb manually
+    let mut xvfb = start_xvfb();
+    println!("Xvfb started on :99");
 
+    // 2. Set DISPLAY for current process and children
+    env::set_var("DISPLAY", ":99");
 
-    let mut node_script = Command::new("node")
+    // 3. Launch Node.js Playwright script
+    let mut node = Command::new("node")
         .arg("Dm_Monitor/dm_monitor.js")
-        .env("DISPLAY", display_num)
-        .stdout(Stdio::null())
-        .stderr(Stdio::null())
+        .arg("https://instagram.com")
         .spawn()
-        .expect("Failed to start Node script");
+        .expect("Failed to start Playwright script");
 
-    println!("Node.js monitor launched.");
-    
-    
-    let server = Server::http("127.0.0.1:3000").unwrap();
-    println!("Listening on http://localhost:3000...");
+    // 4. Wait a few seconds for browser to launch
+    thread::sleep(Duration::from_secs(5));
 
-    for request in server.incoming_requests() {
-        println!("Request received: {:?}", request);
+    // 5. Use Enigo with Settings
+    let mut enigo = Enigo::new(&Settings::default()).expect("Failed to create Enigo instance");
 
-        println!("Method: {:?}", request.method());
-        println!("URL: {:?}", request.url());
+    // 6. Move mouse and click inside the virtual X screen
+    enigo.move_mouse(200, 150, Coordinate::Abs).expect("Mouse move failed");
+    thread::sleep(Duration::from_millis(500));
+    enigo.button(Button::Right, Click).expect("Mouse click failed");
 
-        let response = Response::from_string("OK");
-        request.respond(response).unwrap();
-    }
+    println!("Mouse interaction performed inside xvfb.");
 
-    xvfb.kill().ok();
-    node_script.kill().ok();
+    // 7. Keep running or perform more actions
+    thread::sleep(Duration::from_secs(10));
+
+    // 8. Cleanup
+    let _ = node.kill();
+    let _ = xvfb.kill();
+    println!("Processes terminated.");
 }
